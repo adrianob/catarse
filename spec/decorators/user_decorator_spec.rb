@@ -65,6 +65,19 @@ describe UserDecorator do
     its(:short_name) { should == 'My Name Is Lorem ...' }
   end
 
+  describe "#backs_text" do
+    subject { user = create(:user) }
+    before do
+      create(:backer, user: subject)
+    end
+    its(:backs_text) { should == I18n.t('user.backs_text.one') }
+  end
+
+  describe "#twitter_link" do
+    subject { user = create(:user, twitter: '@lorem') }
+    its(:twitter_link) { should == "http://twitter.com/lorem" }
+  end
+
   describe "#medium_name" do
     subject { user = create(:user, name: 'My Name Is Lorem Ipsum Dolor Sit Amet And This Is a Bit Name I Think') }
     its(:medium_name) { should == 'My Name Is Lorem Ipsum Dolor Sit Amet A...' }
