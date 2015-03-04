@@ -6,6 +6,10 @@ class ProjectObserver < ActiveRecord::Observer
       ProjectDownloaderWorker.perform_async(project.id)
     end
 
+    if project.try(:about_changed?)
+      ProjectImagesDownloaderWorker.perform_async(project.id)
+    end
+
     if project.try(:online_date_changed?) && project.online_date.present? && project.approved?
       project.remove_scheduled_job('ProjectSchedulerWorker')
       ProjectSchedulerWorker.perform_at(project.online_date, project.id)

@@ -2,6 +2,12 @@ module Shared::CatarseAutoHtml
   extend ActiveSupport::Concern
 
   included do
+    AutoHtml.add_filter(:local_image).with({:alt => ''}) do |text, options|
+      text.gsub(/(?<!src=")https?:\/\/.+?\.(jpg|jpeg|bmp|gif|png)(\?\S+)?/i) do |match|
+        %|<img src="#{CatarseSettings[:base_url]}/uploads/project/about_images/project_id/#{h match.split('/').last}" />|
+      end
+    end
+
     AutoHtml.add_filter(:email_image).with(width: 200) do |text, options|
       text.gsub(/http(s)?:\/\/.+\.(jpg|jpeg|bmp|gif|png)(\?\S+)?/i) do |match|
         width = options[:width]
@@ -31,7 +37,7 @@ module Shared::CatarseAutoHtml
           '<' => '&lt;',
           '"' => '"'
         }
-        image
+        local_image
         youtube width: options[:video_width], height: options[:video_height], wmode: "opaque"
         vimeo width: options[:video_width], height: options[:video_height]
         named_link
