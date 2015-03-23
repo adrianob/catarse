@@ -53,7 +53,7 @@ cards = [
       luhn: true
   }
   {
-      type: 'mastercard'
+      type: 'master'
       pattern: /^5[0-5]/
       format: defaultFormat
       length: [16]
